@@ -1,1 +1,44 @@
-/target/
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Maven
+target/
+.mvn/
+.maven/
+.repository/
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+
+# Spring Boot
+spring-boot-*.pid
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Java
+hs_err_pid*
+
+# Temporary files
+*~
+.swp
