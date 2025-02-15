@@ -1,3 +1,4 @@
+ARG JAR_FILE
 # Use an official OpenJDK runtime as a parent image
 FROM openjdk:11-jre-slim
 
