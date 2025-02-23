@@ -1,12 +1,14 @@
-ARG JAR_FILE
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:11-jre-slim
+# Use an official OpenJDK runtime as the base image
+FROM openjdk:17-jdk-slim
 
-# Add a build argument to pass the .jar file path
-ARG JAR_FILE
+# Set the working directory in the container
+WORKDIR /app
 
-# Copy the JAR file into the container
-COPY ${JAR_FILE} app.jar
+# Copy the built JAR file into the image
+COPY ./target/my-spring-boot-app.jar app.jar
 
-# Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# Expose port 8080 if your application runs on it
+EXPOSE 8080
+
+# Command to run the application
+CMD ["java", "-jar", "app.jar"]
