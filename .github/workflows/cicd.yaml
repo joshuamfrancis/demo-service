@@ -34,19 +34,6 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Identify the built .jar file
-      id: jar
-      run: |
-        # Assuming the generated jar file is in the target directory
-        echo "::set-output name=jar_file::$(ls target/*.jar | head -n 1)"
-
-    - name: Build Docker image
-      run: docker build -t my-spring-boot-app --build-arg JAR_FILE=${{ steps.jar.outputs.jar_file }} -f Dockerfile .
-
-    - name: List the built docker image
-      run: |
-        docker image ls
-
     - name: "Configure AWS Credentials"
       uses: aws-actions/configure-aws-credentials@v4.1.0
       with:
