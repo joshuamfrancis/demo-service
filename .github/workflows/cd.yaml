@@ -5,6 +5,7 @@ on:
     workflows: ["Java CI with Maven"]
     types:
       - completed
+  workflow_dispatch:
 
 permissions:
   actions: read
