@@ -1,0 +1,33 @@
+name: Publish Docker Image
+
+on:
+  workflow_run:
+    workflows: ["Build Java JAR"]
+    types:
+      - completed
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: my-app-jar
+
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}:latest .
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository }}:latest
