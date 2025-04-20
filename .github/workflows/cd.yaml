@@ -2,7 +2,7 @@ name: Publish Docker Image
 
 on:
   workflow_run:
-    workflows: ["Build Java JAR"]
+    workflows: ["Java CI with Maven"]
     types:
       - completed
 
@@ -15,19 +15,34 @@ jobs:
       - name: Download JAR artifact
         uses: actions/download-artifact@v4
         with:
-          name: my-app-jar
+          name: app.jar
 
-      - name: Build Docker image
-        run: |
-          docker build -t ghcr.io/${{ github.repository }}:latest .
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+      - name: "Configure AWS Credentials"
+        uses: aws-actions/configure-aws-credentials@v4.1.0
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push Docker image
+          aws-region:  ${{vars.AWS_REGION }}
+          aws-access-key-id:  ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: test aws connection
         run: |
-          docker push ghcr.io/${{ github.repository }}:latest
+          aws sts get-caller-identity
+  
+      - name: Amazon ECR "Login" Action for GitHub Actions
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'true'
+  
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          REPOSITORY: ${{vars.repositoryName}}
+        run: |
+            # Build a docker container and
+            # push it to ECR so that it can
+            # be deployed to ECS.
+            docker build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG .
+            docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
+            echo "image=$ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
