@@ -17,6 +17,17 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
+      # Use GitHub API to list artifacts for the specified workflow run
+      - name: Get Artifact List
+        id: get-artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ARTIFACTS=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.inputs.run_id }}/artifacts")
+          ARTIFACT_ID=$(echo "$ARTIFACTS" | jq -r '.artifacts[0].id')
+          echo "artifact_id=$ARTIFACT_ID" >> $GITHUB_OUTPUT
+          
       - name: Download JAR artifact
         uses: actions/download-artifact@v4
         with:
