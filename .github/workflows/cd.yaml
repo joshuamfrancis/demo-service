@@ -6,6 +6,10 @@ on:
     types:
       - completed
 
+permissions:
+  actions: read
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -17,6 +21,11 @@ jobs:
         with:
           name: app.jar
 
+      - name: List files
+        run: |
+          echo "Files:"
+          find . -type f
+    
       - name: "Configure AWS Credentials"
         uses: aws-actions/configure-aws-credentials@v4.1.0
         with:
