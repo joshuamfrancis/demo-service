@@ -70,6 +70,8 @@ jobs:
             # push it to ECR so that it can
             # be deployed to ECS.
             pwd
+            mkdir jar_files
+            cp *.jar ./jar_files/.
             ls -l 
             docker build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG .
             docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
