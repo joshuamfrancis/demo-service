@@ -41,7 +41,7 @@ jobs:
       - name: List files
         run: |
           echo "Files:"
-          find . -type f
+          find . -type f -ls
     
       - name: "Configure AWS Credentials"
         uses: aws-actions/configure-aws-credentials@v4.1.0
