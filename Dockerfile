@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the built JAR file into the image
-COPY my-spring-boot-app.jar app.jar
+COPY ./my-spring-boot-app.jar app.jar
 
 # Expose port 8080 if your application runs on it
 EXPOSE 8080
