@@ -37,11 +37,14 @@ jobs:
           name: app.jar
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./build/libs/
 
       - name: List files
         run: |
           echo "Files:"
           find . -type f -ls
+          echo "files from /build/libs"
+          ls -la ./build/libs/
     
       - name: "Configure AWS Credentials"
         uses: aws-actions/configure-aws-credentials@v4.1.0
@@ -73,6 +76,6 @@ jobs:
             mkdir jar_files
             cp *.jar ./jar_files/.
             ls -l 
-            docker build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG .
+            docker build . --file Dockerfile --tag $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
             docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
             echo "image=$ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
