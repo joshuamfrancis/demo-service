@@ -34,17 +34,17 @@ jobs:
       - name: Download JAR artifact
         uses: actions/download-artifact@v4
         with:
-          name: app.jar
+          name: app_jar
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path: ./build/libs/
+          path: ./lib/
 
       - name: List files
         run: |
           echo "Files:"
           find . -type f -ls
           echo "files from /build/libs"
-          ls -la ./build/libs/
+          ls -la ./lib
     
       - name: "Configure AWS Credentials"
         uses: aws-actions/configure-aws-credentials@v4.1.0
