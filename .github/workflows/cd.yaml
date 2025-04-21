@@ -37,7 +37,7 @@ jobs:
           name: app_jar
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path: /home/runner/work/project/build/libs/
+          path: ./build/libs/
 
       - name: List files
         run: |
